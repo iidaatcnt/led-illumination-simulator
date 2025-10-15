@@ -50,14 +50,19 @@ function App() {
 
       switch(pattern) {
         case 'waterfall': {
-          // 滝（上から下へ流れる）
+          // 滝（上から下へ連続的に大量の水が流れる）
           for (let strip = 0; strip < stripCount; strip++) {
-            const offset = strip * 10
-            for (let i = 0; i < ledCount; i++) {
-              const position = (frameRef.current + offset) % (ledCount + 20)
-              if (position >= i && position < i + 15) {
-                const distance = position - i
-                newStates[strip][i] = Math.max(0, 1 - distance / 15)
+            const offset = strip * 5
+            // 複数の水の流れを重ねて連続的な滝を表現
+            for (let flow = 0; flow < 8; flow++) {
+              const flowOffset = flow * 10
+              for (let i = 0; i < ledCount; i++) {
+                const position = (frameRef.current + offset + flowOffset) % (ledCount + 10)
+                if (position >= i && position < i + 8) {
+                  const distance = position - i
+                  const intensity = Math.max(0, 1 - distance / 8)
+                  newStates[strip][i] = Math.max(newStates[strip][i], intensity * 0.9)
+                }
               }
             }
           }
@@ -119,14 +124,22 @@ function App() {
         }
 
         case 'meteor': {
-          // 流星（長い尾を引く）
+          // 流星（ポツリポツリと流れ星が流れる）
           for (let strip = 0; strip < stripCount; strip++) {
-            const offset = strip * 20
-            const position = (frameRef.current * 1.5 + offset) % (ledCount + 30)
-            for (let i = 0; i < ledCount; i++) {
-              if (position >= i && position < i + 25) {
-                const distance = position - i
-                newStates[strip][i] = Math.max(0, 1 - distance / 25)
+            // 長い間隔で流星が現れる（ledCountの3倍の周期）
+            const offset = strip * 50
+            const position = (frameRef.current * 1.2 + offset) % (ledCount * 3)
+
+            // 流星が画面内にいる時だけ表示
+            if (position < ledCount + 30) {
+              for (let i = 0; i < ledCount; i++) {
+                // 長い尾を引く流れ星
+                if (position >= i && position < i + 30) {
+                  const distance = position - i
+                  // 先端が明るく、尾に向かって暗くなる
+                  const intensity = Math.max(0, 1 - Math.pow(distance / 30, 1.5))
+                  newStates[strip][i] = intensity
+                }
               }
             }
           }
