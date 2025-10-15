@@ -31,7 +31,7 @@ function App() {
       Array(ledCount).fill(0)
     )
     setLedStates(initialStates)
-  }, [stripCount])
+  }, [stripCount, ledCount])
 
   // アニメーションループ
   useEffect(() => {
@@ -565,8 +565,9 @@ function App() {
                             style={{
                               width: '12px',
                               height: `${height * 100 / ledCount}px`,
-                              backgroundColor: `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`,
-                              opacity: intensity,
+                              backgroundColor: intensity > 0 ? `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})` : 'transparent',
+                              opacity: intensity > 0 ? intensity : 1,
+                              border: '1px solid rgba(255, 255, 255, 0.1)',
                               boxShadow: intensity > 0.5 ? `0 0 10px rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${intensity})` : 'none',
                             }}
                           />
