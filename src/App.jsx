@@ -43,7 +43,7 @@ function App() {
     }
 
     const animate = () => {
-      frameRef.current += speed / 10
+      frameRef.current += speed / 20
       const newStates = Array(stripCount).fill(0).map(() =>
         Array(ledCount).fill(0)
       )
