@@ -97,14 +97,21 @@ function App() {
         }
 
         case 'snow': {
-          // 雪（ゆっくり落ちる）
+          // 雪（ゆっくり落ちる雪の結晶）
           for (let strip = 0; strip < stripCount; strip++) {
-            for (let flake = 0; flake < 5; flake++) {
-              const offset = flake * 15 + strip * 5
-              const position = (frameRef.current * 0.3 + offset) % (ledCount + 20)
+            for (let flake = 0; flake < 4; flake++) {
+              const offset = flake * 20 + strip * 7
+              const position = (frameRef.current * 0.4 + offset) % (ledCount + 25)
               if (position < ledCount) {
                 const idx = Math.floor(position)
-                newStates[strip][idx] = Math.max(newStates[strip][idx], 0.8)
+                // 雪の結晶：中心が明るく、周辺が少し光る
+                newStates[strip][idx] = 1.0
+                if (idx > 0) {
+                  newStates[strip][idx - 1] = Math.max(newStates[strip][idx - 1], 0.3)
+                }
+                if (idx < ledCount - 1) {
+                  newStates[strip][idx + 1] = Math.max(newStates[strip][idx + 1], 0.3)
+                }
               }
             }
           }
@@ -323,32 +330,37 @@ function App() {
         }
 
         case 'text': {
-          // テキスト表示（"LED"の文字）
-          const text = [
-            // L
-            [1,1,1,1,1,0,0,0],
-            [1,0,0,0,0,0,0,0],
-            [1,0,0,0,0,0,0,0],
-            [1,0,0,0,0,0,0,0],
-            [1,1,1,1,1,0,0,0],
-            // E
-            [1,1,1,1,1,0,0,0],
-            [1,0,0,0,0,0,0,0],
-            [1,1,1,1,0,0,0,0],
-            [1,0,0,0,0,0,0,0],
-            [1,1,1,1,1,0,0,0],
-            // D
-            [1,1,1,1,0,0,0,0],
-            [1,0,0,0,1,0,0,0],
-            [1,0,0,0,1,0,0,0],
-            [1,0,0,0,1,0,0,0],
-            [1,1,1,1,0,0,0,0],
-          ]
-          const scrollPos = Math.floor(frameRef.current / 5)
-          for (let strip = 0; strip < stripCount && strip < text.length; strip++) {
+          // テキスト表示（"LED"の文字が上から下にスクロール）
+          // 各テープに文字パターンを表示（5x7ドットフォント風）
+          const message = "LED"
+          const charHeight = 10
+          const gap = 5
+          const totalHeight = message.length * (charHeight + gap)
+          const scrollPos = Math.floor(frameRef.current / 3) % (ledCount + totalHeight)
+
+          for (let strip = 0; strip < stripCount; strip++) {
             for (let i = 0; i < ledCount; i++) {
-              const charPos = (i + scrollPos) % text[strip].length
-              newStates[strip][i] = text[strip][charPos]
+              // スクロール位置を計算
+              const pos = (i + scrollPos) % (ledCount + totalHeight)
+
+              // 簡単なパターン：各文字を点滅で表現
+              if (pos < charHeight) {
+                // "L"
+                if (strip === 0 || strip === Math.floor(stripCount / 2) || strip === stripCount - 1) {
+                  newStates[strip][i] = 1
+                }
+              } else if (pos >= charHeight + gap && pos < charHeight * 2 + gap) {
+                // "E"
+                if ((pos - charHeight - gap) % 3 === 0 || strip === 0 || strip === stripCount - 1) {
+                  newStates[strip][i] = 1
+                }
+              } else if (pos >= charHeight * 2 + gap * 2 && pos < charHeight * 3 + gap * 2) {
+                // "D"
+                if (strip === 0 || strip === stripCount - 1 ||
+                    (pos - charHeight * 2 - gap * 2) % 5 === 0) {
+                  newStates[strip][i] = 1
+                }
+              }
             }
           }
           break
