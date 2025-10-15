@@ -7,7 +7,7 @@ function App() {
   const [pattern, setPattern] = useState('waterfall')
   const [color, setColor] = useState('#00ffff')
   const [speed, setSpeed] = useState(50)
-  const [isPlaying, setIsPlaying] = useState(true)
+  const [isPlaying, setIsPlaying] = useState(false)
   const [ledStates, setLedStates] = useState([])
 
   const frameRef = useRef(0)
