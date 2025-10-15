@@ -409,24 +409,24 @@ function App() {
   const rgb = hexToRgb(color)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 text-white p-4 md:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 text-white p-3 sm:p-4 md:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto">
         {/* ヘッダー */}
-        <header className="text-center mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold mb-2">
+        <header className="text-center mb-4 md:mb-6 lg:mb-8">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2">
             LEDイルミネーション シミュレーター
           </h1>
-          <p className="text-gray-300 text-sm md:text-base">
+          <p className="text-gray-300 text-xs sm:text-sm md:text-base">
             建物から垂直に垂らすLEDテープの視覚効果を確認
           </p>
         </header>
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
           {/* コントロールパネル */}
-          <div className="lg:col-span-1 space-y-6">
+          <div className="lg:col-span-1 space-y-4 md:space-y-6">
             {/* パターン選択 */}
-            <div className="bg-gray-800 rounded-lg p-6 shadow-xl">
-              <h2 className="text-xl font-semibold mb-4">パターン選択</h2>
+            <div className="bg-gray-800 rounded-lg p-4 sm:p-5 md:p-6 shadow-xl">
+              <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4">パターン選択</h2>
               <select
                 value={pattern}
                 onChange={(e) => setPattern(e.target.value)}
@@ -467,8 +467,8 @@ function App() {
             </div>
 
             {/* パラメータ調整 */}
-            <div className="bg-gray-800 rounded-lg p-6 shadow-xl space-y-4">
-              <h2 className="text-xl font-semibold mb-4">パラメータ調整</h2>
+            <div className="bg-gray-800 rounded-lg p-4 sm:p-5 md:p-6 shadow-xl space-y-3 md:space-y-4">
+              <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4">パラメータ調整</h2>
 
               <div>
                 <label className="block text-sm mb-2">
@@ -514,8 +514,8 @@ function App() {
             </div>
 
             {/* カラー選択 */}
-            <div className="bg-gray-800 rounded-lg p-6 shadow-xl">
-              <h2 className="text-xl font-semibold mb-4">カラー選択</h2>
+            <div className="bg-gray-800 rounded-lg p-4 sm:p-5 md:p-6 shadow-xl">
+              <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4">カラー選択</h2>
 
               <div className="mb-4">
                 <label className="block text-sm mb-2">カスタムカラー</label>
@@ -555,10 +555,10 @@ function App() {
             </div>
 
             {/* 再生コントロール */}
-            <div className="bg-gray-800 rounded-lg p-6 shadow-xl">
+            <div className="bg-gray-800 rounded-lg p-4 sm:p-5 md:p-6 shadow-xl">
               <button
                 onClick={() => setIsPlaying(!isPlaying)}
-                className="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                className="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors text-sm sm:text-base"
               >
                 {isPlaying ? '⏸️ 一時停止' : '▶️ 再生'}
               </button>
@@ -567,13 +567,13 @@ function App() {
 
           {/* プレビュー画面 */}
           <div className="lg:col-span-2">
-            <div className="bg-gray-800 rounded-lg p-6 shadow-xl">
-              <h2 className="text-xl font-semibold mb-4">プレビュー</h2>
-              <div className="bg-black rounded-lg p-8 overflow-auto">
+            <div className="bg-gray-800 rounded-lg p-4 sm:p-5 md:p-6 shadow-xl">
+              <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4">プレビュー</h2>
+              <div className="bg-black rounded-lg p-4 sm:p-6 md:p-8 overflow-auto">
                 <div
-                  className="flex justify-center gap-4"
+                  className="flex justify-center gap-2 sm:gap-3 md:gap-4"
                   style={{
-                    minHeight: `${height * 100}px`,
+                    minHeight: `${height * 80}px`,
                   }}
                 >
                   {Array.from({ length: stripCount }).map((_, stripIndex) => (
@@ -583,13 +583,15 @@ function App() {
                     >
                       {Array.from({ length: ledCount }).map((_, ledIndex) => {
                         const intensity = ledStates[stripIndex]?.[ledIndex] || 0
+                        const ledWidth = window.innerWidth < 640 ? 8 : window.innerWidth < 768 ? 10 : 12
+                        const ledHeight = (height * 80 / ledCount)
                         return (
                           <div
                             key={ledIndex}
                             className="rounded-full transition-opacity"
                             style={{
-                              width: '12px',
-                              height: `${height * 100 / ledCount}px`,
+                              width: `${ledWidth}px`,
+                              height: `${ledHeight}px`,
                               backgroundColor: intensity > 0 ? `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})` : 'transparent',
                               opacity: intensity > 0 ? intensity : 1,
                               border: '1px solid rgba(255, 255, 255, 0.1)',
@@ -617,7 +619,7 @@ function App() {
         </div>
 
         {/* フッター */}
-        <footer className="text-center mt-8 text-gray-400 text-sm">
+        <footer className="text-center mt-6 md:mt-8 text-gray-400 text-xs sm:text-sm">
           <p>© 2025 LED Illumination Simulator v1.0</p>
           <p className="mt-1">大学先生向け提案用シミュレーター</p>
         </footer>
