@@ -6,7 +6,7 @@ function App() {
   const [stripCount, setStripCount] = useState(5)
   const [pattern, setPattern] = useState('waterfall')
   const [color, setColor] = useState('#ffffff')
-  const [speed, setSpeed] = useState(50)
+  const [speed, setSpeed] = useState(15)
   const [isPlaying, setIsPlaying] = useState(false)
   const [ledStates, setLedStates] = useState([])
 
@@ -506,7 +506,7 @@ function App() {
                 <input
                   type="range"
                   min="10"
-                  max="100"
+                  max="30"
                   value={speed}
                   onChange={(e) => setSpeed(Number(e.target.value))}
                   className="w-full"
