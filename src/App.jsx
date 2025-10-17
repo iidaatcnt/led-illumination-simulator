@@ -222,16 +222,27 @@ function App() {
         }
 
         case 'arrow_down': {
-          // 矢印（下向き）
-          const pos = Math.floor(frameRef.current / 5) % ledCount
+          // 矢印（下向き）- 明確な三角形と軸
+          const pos = Math.floor(frameRef.current / 5) % (ledCount + 15)
+          const center = Math.floor(stripCount / 2)
+
           for (let strip = 0; strip < stripCount; strip++) {
             for (let i = 0; i < ledCount; i++) {
-              if (i === pos) {
+              // 軸部分（中央のテープに縦線）
+              if (strip === center && i >= pos - 12 && i < pos - 2 && i >= 0) {
                 newStates[strip][i] = 1
-              } else if (i === pos - 1 && strip > 0 && strip < stripCount - 1) {
-                if (strip === Math.floor(stripCount / 2)) {
-                  newStates[strip - 1][i] = 0.5
-                  newStates[strip + 1][i] = 0.5
+              }
+
+              // 三角の先端部分（V字型に広がる）
+              const arrowTipStart = pos - 5
+              const arrowTipEnd = pos
+              if (i >= arrowTipStart && i <= arrowTipEnd && i >= 0 && i < ledCount) {
+                const depth = i - arrowTipStart  // 0-5
+                const width = depth + 1  // 三角の幅
+                const distanceFromCenter = Math.abs(strip - center)
+
+                if (distanceFromCenter <= width) {
+                  newStates[strip][i] = 1
                 }
               }
             }
@@ -240,16 +251,28 @@ function App() {
         }
 
         case 'arrow_up': {
-          // 矢印（上向き）
-          const pos = ledCount - 1 - (Math.floor(frameRef.current / 5) % ledCount)
+          // 矢印（上向き）- 明確な三角形と軸
+          const basePos = Math.floor(frameRef.current / 5) % (ledCount + 15)
+          const pos = ledCount - basePos
+          const center = Math.floor(stripCount / 2)
+
           for (let strip = 0; strip < stripCount; strip++) {
             for (let i = 0; i < ledCount; i++) {
-              if (i === pos) {
+              // 軸部分（中央のテープに縦線）
+              if (strip === center && i <= pos + 12 && i > pos + 2 && i < ledCount) {
                 newStates[strip][i] = 1
-              } else if (i === pos + 1 && strip > 0 && strip < stripCount - 1) {
-                if (strip === Math.floor(stripCount / 2)) {
-                  newStates[strip - 1][i] = 0.5
-                  newStates[strip + 1][i] = 0.5
+              }
+
+              // 三角の先端部分（逆V字型に広がる）
+              const arrowTipStart = pos
+              const arrowTipEnd = pos + 5
+              if (i >= arrowTipStart && i <= arrowTipEnd && i >= 0 && i < ledCount) {
+                const depth = i - arrowTipStart  // 0-5
+                const width = 5 - depth  // 三角の幅（逆）
+                const distanceFromCenter = Math.abs(strip - center)
+
+                if (distanceFromCenter <= width) {
+                  newStates[strip][i] = 1
                 }
               }
             }
