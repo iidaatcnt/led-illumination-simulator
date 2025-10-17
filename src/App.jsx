@@ -490,7 +490,7 @@ function App() {
                 </label>
                 <input
                   type="range"
-                  min="3"
+                  min="1"
                   max="15"
                   value={stripCount}
                   onChange={(e) => setStripCount(Number(e.target.value))}
