@@ -5,7 +5,7 @@ function App() {
   const [height, setHeight] = useState(2)
   const [stripCount, setStripCount] = useState(5)
   const [pattern, setPattern] = useState('waterfall')
-  const [color, setColor] = useState('#00ffff')
+  const [color, setColor] = useState('#ffffff')
   const [speed, setSpeed] = useState(50)
   const [isPlaying, setIsPlaying] = useState(false)
   const [ledStates, setLedStates] = useState([])
@@ -17,6 +17,7 @@ function App() {
 
   // プリセットカラー
   const presetColors = [
+    { name: '白', value: '#ffffff' },
     { name: 'シアン', value: '#00ffff' },
     { name: 'マゼンタ', value: '#ff0080' },
     { name: 'グリーン', value: '#00ff00' },
