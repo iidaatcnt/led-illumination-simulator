@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 
 function App() {
   // State管理
-  const [height, setHeight] = useState(3)
+  const [height, setHeight] = useState(2)
   const [stripCount, setStripCount] = useState(5)
   const [pattern, setPattern] = useState('waterfall')
   const [color, setColor] = useState('#00ffff')
@@ -13,7 +13,7 @@ function App() {
   const frameRef = useRef(0)
   const animationRef = useRef(null)
 
-  const ledCount = 60 // 固定
+  const ledCount = 40 // 2m ÷ 5cm間隔 = 40個
 
   // プリセットカラー
   const presetColors = [
