@@ -505,7 +505,7 @@ function App() {
                 </label>
                 <input
                   type="range"
-                  min="10"
+                  min="0"
                   max="30"
                   value={speed}
                   onChange={(e) => setSpeed(Number(e.target.value))}
