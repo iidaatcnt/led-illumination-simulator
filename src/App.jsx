@@ -222,28 +222,28 @@ function App() {
         }
 
         case 'arrow_down': {
-          // 矢印（下向き）- 明確な三角形と軸
+          // 矢印（下向き）- 三角が先頭、その後ろに軸
           const pos = Math.floor(frameRef.current / 5) % (ledCount + 15)
           const center = Math.floor(stripCount / 2)
 
           for (let strip = 0; strip < stripCount; strip++) {
             for (let i = 0; i < ledCount; i++) {
-              // 軸部分（中央のテープに縦線）
-              if (strip === center && i >= pos - 12 && i < pos - 2 && i >= 0) {
-                newStates[strip][i] = 1
-              }
-
-              // 三角の先端部分（V字型に広がる）
-              const arrowTipStart = pos - 5
-              const arrowTipEnd = pos
+              // 三角の先端部分（V字型に広がる）- 先頭
+              const arrowTipStart = pos
+              const arrowTipEnd = pos + 5
               if (i >= arrowTipStart && i <= arrowTipEnd && i >= 0 && i < ledCount) {
                 const depth = i - arrowTipStart  // 0-5
-                const width = depth + 1  // 三角の幅
+                const width = depth + 1  // 三角の幅が広がる
                 const distanceFromCenter = Math.abs(strip - center)
 
                 if (distanceFromCenter <= width) {
                   newStates[strip][i] = 1
                 }
+              }
+
+              // 軸部分（中央のテープに縦線）- 三角の後ろ
+              if (strip === center && i > pos + 5 && i <= pos + 15 && i < ledCount) {
+                newStates[strip][i] = 1
               }
             }
           }
@@ -251,29 +251,29 @@ function App() {
         }
 
         case 'arrow_up': {
-          // 矢印（上向き）- 明確な三角形と軸
+          // 矢印（上向き）- 三角が先頭、その後ろに軸
           const basePos = Math.floor(frameRef.current / 5) % (ledCount + 15)
           const pos = ledCount - basePos
           const center = Math.floor(stripCount / 2)
 
           for (let strip = 0; strip < stripCount; strip++) {
             for (let i = 0; i < ledCount; i++) {
-              // 軸部分（中央のテープに縦線）
-              if (strip === center && i <= pos + 12 && i > pos + 2 && i < ledCount) {
-                newStates[strip][i] = 1
-              }
-
-              // 三角の先端部分（逆V字型に広がる）
-              const arrowTipStart = pos
-              const arrowTipEnd = pos + 5
+              // 三角の先端部分（逆V字型）- 先頭
+              const arrowTipStart = pos - 5
+              const arrowTipEnd = pos
               if (i >= arrowTipStart && i <= arrowTipEnd && i >= 0 && i < ledCount) {
-                const depth = i - arrowTipStart  // 0-5
-                const width = 5 - depth  // 三角の幅（逆）
+                const depth = arrowTipEnd - i  // 5-0
+                const width = depth + 1  // 三角の幅が広がる
                 const distanceFromCenter = Math.abs(strip - center)
 
                 if (distanceFromCenter <= width) {
                   newStates[strip][i] = 1
                 }
+              }
+
+              // 軸部分（中央のテープに縦線）- 三角の後ろ
+              if (strip === center && i < pos - 5 && i >= pos - 15 && i >= 0) {
+                newStates[strip][i] = 1
               }
             }
           }
